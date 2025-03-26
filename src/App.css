@@ -4,8 +4,114 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 10px;
+}
+
+body {
+  color: var(--Neutral-100);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+  all: unset;
+  display: inline-block;
+  cursor: pointer;
+}
+
+a {
+  all: unset;
+  display: inline-block;
+  cursor: pointer;
+}
+
+:root {
+  --Neutral-900: #000000;
+  --Neutral-800: #141414;
+  --Neutral-600: #252525;
+  --Neutral-400: #999999;
+  --Neutral-200: #CACACA;
+  --Neutral-100: #FFFFFF;
+
+  --Brand-900: #E87000;
+  --Brand-800: #F57600;
+  --Brand-600: #FF932E;
+  --Brand-400: #FFBD80;
+  --Brand-100: #FFCD9E;
+
+
+  --spacing-01: 0.2rem;
+  --spacing-02: 0.4rem;
+  --spacing-03: 0.8rem;
+  --spacing-04: 1.2rem;
+  --spacing-05: 1.6rem;
+  --spacing-06: 2.4rem;
+  --spacing-07: 3.2rem;
+  --spacing-08: 4.0rem;
+  --spacing-09: 4.8rem;
+  --spacing-10: 6.4rem;
+  --spacing-11: 8.0rem;
+  --spacing-12: 9.6rem;
+  --spacing-13: 16.0rem,;
+
+
+  --mobile-Label-md: 1rem;
+  --mobile-label-lg: 1.3rem;
+
+  --mobile-body-md: 1.6rem;
+  --mobile-body-lg: 2.0rem;
+
+  --mobile-header-sm: 2.5rem;
+  --mobile-header-md: 3.1rem;
+  --mobile-header-lg: 3.9rem;
+
+  --mobile-display-md: 4.9rem;
+  --mobile-display-lg: 6.1rem;
+}
+
+
 .App {
-  width: 100px;
-  height: 100px;
-  background-color: aqua;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--Neutral-900);
+}
+
+.Navbar {
+  min-width: 100%;
+  background: var(--Neutral-800);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Navbar-logo-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-03);
+}
+
+.Navbar-header {
+  font-size: var(--mobile-header-sm);
+  color: var(--Brand-900)
+}
+
+.Navbar-logo {
+  height: 5rem;
+}
+
+.Navbar-login-button {
+  background-color: var(--Neutral-600);
+  font-size: var(--mobile-body-md);
+  padding: 1em 1.5em 1em 1.5em;
+}
+
+.Navbar-hamburger-button {
+
+}
+
+.Navbar-clickables-container {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-04);
 }
