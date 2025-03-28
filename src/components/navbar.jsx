@@ -1,6 +1,6 @@
 import LoginButton from './LoginButton';
 
-function Navbar() {
+export default function Navbar() {
   return(
     <nav className="Navbar">
       <div className="Navbar-clickables-container">
@@ -16,5 +16,3 @@ function Navbar() {
     </nav>
   );
 }
-
-export default Navbar

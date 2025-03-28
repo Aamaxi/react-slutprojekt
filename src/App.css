@@ -115,3 +115,31 @@ a {
   flex-direction: row;
   gap: var(--spacing-04);
 }
+
+
+.carousel-header {
+  font-size: var(--mobile-header-md);
+}
+
+.carousel-item {
+  width: 30rem;
+}
+
+.carousel-rating {
+  background-color: var(--Neutral-800);
+  display: flex;
+  align-items: center;
+  
+}
+
+.carousel-img {
+  width: 100%;
+}
+
+.carousel-item-info {
+  background: var(--Neutral-800);
+  font-size: var(--mobile-body-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-03);
+}

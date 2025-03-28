@@ -1,23 +1,21 @@
 import './App.css';
-import Navbar from "./components/Navbar.jsx"
+import Navbar from "./components/Navbar.jsx";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Film from "./pages/Film.js";
+import Home from "./pages/Home.js"
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header>
-        <Navbar />
-      </header>
-      <main>
-        <section></section>
-        <section></section>
-        <section></section>
-        <section></section>
-      </main>
-      <footer>
+    <Router>
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/film">Film</Link> {/* Navigation to the Film page */}
+      </nav>
 
-      </footer>
-    </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/film" element={<Film />} /> {/* Route for Film */}
+      </Routes>
+    </Router>
   );
 }
-
-export default App;
