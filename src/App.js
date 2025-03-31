@@ -7,11 +7,7 @@ import Home from "./pages/Home.js"
 export default function App() {
   return (
     <Router>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/film">Film</Link> {/* Navigation to the Film page */}
-      </nav>
-
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/film" element={<Film />} /> {/* Route for Film */}

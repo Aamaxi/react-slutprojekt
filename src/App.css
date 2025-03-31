@@ -25,6 +25,10 @@ a {
   cursor: pointer;
 }
 
+main {
+  background-color: var(--Neutral-900);
+}
+
 :root {
   --Neutral-900: #000000;
   --Neutral-800: #141414;
@@ -72,7 +76,7 @@ a {
 
 .App {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background-color: var(--Neutral-900);
 }
 
@@ -117,29 +121,53 @@ a {
 }
 
 
-.carousel-header {
+.Carousel-container {
+  display: flex;
+  gap: 5rem;
+  overflow-x: scroll;
+}
+
+.Carousel-header {
   font-size: var(--mobile-header-md);
 }
 
-.carousel-item {
-  width: 30rem;
-}
-
-.carousel-rating {
-  background-color: var(--Neutral-800);
+.Carousel-item-container {
   display: flex;
-  align-items: center;
-  
+  flex-direction: column;
+  font-size: var(--mobile-body-md);
+  gap: var(--spacing-04);
+  background-color: var(--Neutral-800);
+  width: fit-content;
 }
 
-.carousel-img {
+.Carousel-item-img {
+  width: 300px;
+}
+
+.Carousel-item-span-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-04);
+}
+
+
+.Footer {
+  display: flex;
+  background-color: var(--Neutral-800);
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.Footer-line {
+  background-color: var(--Neutral-100);
+  height: 0.5rem;
   width: 100%;
 }
 
-.carousel-item-info {
-  background: var(--Neutral-800);
+.Footer-link {
   font-size: var(--mobile-body-md);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-03);
 }
+
+

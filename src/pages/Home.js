@@ -1,18 +1,15 @@
 import '../App.css';
-import Navbar from "../components/Navbar.jsx";
+import Carousel from "../components/Carousel.jsx";
+import Footer from "../components/Footer.jsx";
 
 export default function Home() {
   return (
     <div className="App">
-      <header>
-        <Navbar />
-      </header>
       <main>
-        lksdjflksdjf
+        <Carousel />
+        <Carousel />
       </main>
-      <footer>
-
-      </footer>
+      <Footer />
     </div>
   );
 }
