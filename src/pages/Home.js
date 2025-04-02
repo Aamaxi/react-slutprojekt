@@ -1,5 +1,5 @@
 import '../App.css';
-import Carousel from "../components/Carousel.jsx";
+import Carousel from "../components/carousel/Carousel.jsx";
 import Footer from "../components/Footer.jsx";
 
 export default function Home() {

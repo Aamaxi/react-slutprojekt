@@ -171,3 +171,67 @@ main {
 }
 
 
+.film-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.film-top-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.film-text {
+  font-size: var(--mobile-label-lg);
+}
+
+.rating-text {
+  font-size: var(--mobile-body-md)
+}
+
+.film-picture-collection {
+
+}
+
+.film-poster-info {
+  width: 100px;
+}
+
+.film-bottom-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.film-bottom-buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.film-add-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 1.5rem;
+}
+
+.button-add-icon {
+  height: 100%;
+}
+
+.film-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  height: 0.1rem;
+}
+
+.rating-icon {
+  height: 1.5rem;
+}
+
+.credits-container {
+  
+}
