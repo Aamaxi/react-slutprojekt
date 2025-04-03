@@ -1,11 +1,34 @@
 import FilmPictures from "./FilmPictures.jsx"
+import { useEffect, useState } from 'react';
 
 export default function FilmInfo() {
+  const [filmData, setFilmData] = useState(null);
+  
+  useEffect(() => {
+    fetch("http://localhost:5000/film")
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      console.log(data);
+      setFilmData(data);
+    })
+    .catch(function(error) {
+      console.log(error);
+    })
+  }, []);
+
+  if (!filmData) {
+    return <p>Loading...</p>; // Prevent rendering before data is fetched
+  }
+
+  const film = filmData[0]
+  
   return(
   <div className="film-container">
     <div className="film-top-container">
       <div>
-        <h1>Night of the Living Dead</h1>
+        <h1>{film.name}</h1>
         <p>1968 • 1h 36m • 15y</p>
       </div>
       <div>

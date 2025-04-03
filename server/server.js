@@ -2,6 +2,9 @@
 const mysql = require("mysql2");
 const express = require("express");
 const app = express();
+const cors = require("cors");
+
+app.use(cors())
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -10,6 +13,22 @@ const connection = mysql.createConnection({
   password: "slenderman"
 })
 
+app.get("/film", (req, res) => {
+  connection.query("SELECT * FROM films", (err, results) => {
+    if (err) {
+      res.status(500).json({error: err.message});
+      return;
+    }
+    res.json(results);
+  });
+});
+
+
+
+app.listen(5000, () => console.log("Server running at 5000"));
+
+
+/*
 connection.query("SELECT * FROM `acted_in`;", function(err, results){
   if (err) {
     console.error("error executing query", err)
@@ -19,6 +38,7 @@ connection.query("SELECT * FROM `acted_in`;", function(err, results){
 
 
 });
+*/
 
 
 /*
