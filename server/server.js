@@ -4,6 +4,7 @@ const app = express();
 const cors = require("cors");
 
 app.use(cors());
+app.use(express.json())
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -16,25 +17,29 @@ app.get("/film", (req, res) => {
   const film_id = req.query.film_id; // Get film_id from query parameter
   console.log("Received film_id:", film_id);
 
+  // First query to get film details
   connection.query("SELECT * FROM films WHERE film_id = ?", [film_id], (err, filmResults) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    // Second query to get credits for the film
+    connection.query("SELECT * FROM acted_in WHERE film_id = ?", [film_id], (err, creditsResults) => {
       if (err) {
         res.status(500).json({ error: err.message });
         return;
       }
+
+      // Send the response after both queries complete
+      res.json({
+        film: filmResults,
+        credits: creditsResults,
+      });
     });
-
-  connection.query("SELECT * FROM acted_in WHERE film_id = ?", [film_id], (err, creditsResults) => {
-    if (err) {
-      res.status(500).json({ error: err.message});
-      return;
-    }
-  });
-
-  res.json({
-    film: filmResults,
-    credits: creditsResults
   });
 });
+
 
 app.get("/list", (req, res) => {
   const list_id = req.query.list_id;
@@ -62,5 +67,25 @@ app.get("/list", (req, res) => {
     });
   });
 });
+
+app.post("/register", (req, res) => {
+  console.log("ljhlksdjf: ", req.body)
+  const { username, email, password } = req.body;
+  
+  const query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+  connection.query(query, [username, email, password], (err, results) => {
+    if (err) {
+      console.error("Error inserting user: ", err);
+      res.status(500).json({ error: "Failed to create account." });
+    }
+
+    res.status(201).json({ message: "Account created successfully!" })
+  })
+})
+
+
+
+
+
 
 app.listen(5000, () => console.log("Server running at http://localhost:5000"));

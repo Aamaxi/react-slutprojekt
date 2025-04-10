@@ -33,7 +33,7 @@ export default function FilmInfo() {
     }
   }, [location.search]); // Re-run when URL changes (film_id in the query string)
 
-  if (!filmData) {
+  if (!filmData) {  
     return <p>Loading...</p>; // Prevent rendering before data is fetched
   }
 
