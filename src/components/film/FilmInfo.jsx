@@ -24,7 +24,7 @@ export default function FilmInfo() {
           return response.json();
         })
         .then(function (data) {
-          setFilmData(data); // Set film ddata from the backend
+          setFilmData(data); // Set film data from the backend
           console.log(data);
         })
         .catch(function (error) {
@@ -37,7 +37,7 @@ export default function FilmInfo() {
     return <p>Loading...</p>; // Prevent rendering before data is fetched
   }
 
-  const film = filmData[0]; // Assuming data is returned as an array and the film is the first item
+  const film = filmData.film; // Assuming data is returned as an array and the film is the first item
   
   return (
     <div className="film-container">

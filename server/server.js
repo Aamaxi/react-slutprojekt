@@ -24,7 +24,6 @@ const connection = mysql.createConnection({
 
 app.get("/film", (req, res) => {
   const film_id = req.query.film_id; // Get film_id from query parameter
-  console.log("Received film_id:", film_id);
 
   // First query to get film details
   connection.query("SELECT * FROM films WHERE film_id = ?", [film_id], (err, filmResults) => {
@@ -34,16 +33,62 @@ app.get("/film", (req, res) => {
     }
 
     // Second query to get credits for the film
-    connection.query("SELECT * FROM acted_in WHERE film_id = ?", [film_id], (err, creditsResults) => {
+    connection.query("SELECT * FROM acted_in WHERE film_id = ?", [film_id], (err, actedResults) => {
       if (err) {
         res.status(500).json({ error: err.message });
         return;
       }
 
-      // Send the response after both queries complete
-      res.json({
-        film: filmResults,
-        credits: creditsResults,
+      connection.query("SELECT * FROM directed_in WHERE film_id = ?", [film_id], (err, directedResults) => {
+        if (err) {
+          res.status(500).json({ error: err.message });
+          return;
+        }
+
+        connection.query("SELECT * FROM produced_in WHERE film_id = ?", [film_id], (err, producedResults) => {
+          if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+          }
+
+          connection.query("SELECT * FROM written_in WHERE film_id = ?", [film_id], (err, writtenResults) => {
+            if (err) {
+              res.status(500).json({ error: err.message });
+              return;
+            }
+
+            connection.query("SELECT * FROM people", [film_id], (err, peopleResults) => {
+              if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+              }
+
+              console.log(writtenResults)
+              // Combine all credits into a single object
+              const creditsResults = {
+                acted: actedResults.map((acted) => ({
+                  actor_name: acted.actor_name,
+                  role: acted.role,
+                })),
+                directed: directedResults.map((directed) => ({
+                  director_name: directed.director_name,
+                })),
+                produced: producedResults.map((produced) => ({
+                  producer_name: produced.producer_name,
+                })),
+                written: writtenResults.map((written) => ({
+                  writer_name: written.writer_name,
+                })),
+              };
+
+            // Send the response after all queries complete
+            res.json({
+              film: filmResults[0], // Assuming filmResults is an array with one item
+              credits: creditsResults,
+              people: peopleResults
+            });
+          });
+        });
       });
     });
   });
