@@ -192,7 +192,25 @@ app.get("/person", (req, res) => {
 });
 
 
+app.get("/search", (req, res) => {
+  connection.query("SELECT * FROM films", (err, filmsResults) => {
+    if (err) {
+      res.status(500).json({ err: err.message })
+      return;
+    }
+    connection.query("SELECT * FROM people", (err, peopleResults) => {
+      if (err) {
+        res.status(500).json({ err: err.message })
+        return;
+      }
 
+      res.json({
+        films: filmsResults,
+        people: peopleResults
+      })
+    });
+  });
+});
 
 
 app.post("/register", (req, res) => {

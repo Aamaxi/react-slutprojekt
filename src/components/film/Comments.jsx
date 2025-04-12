@@ -22,7 +22,6 @@ export default function Comments() {
         .then((response) => response.json())
         .then((data) => {
           setFilmData(data); // Set film data from the backend
-          console.log("Film data:", data);
         })
         .catch((error) => {
           console.log(error);

@@ -106,6 +106,7 @@ export default function List() {
         {sortedFilms.map((film) => (
           <div key={film.film_id} className="film-item">
             <h3>{film.name}</h3>
+            <img src={`/film_posters/${film.film_id}.png`} alt={`${film.name} Poster`} />            ¨
             <p><strong>Year:</strong> {film.year}</p>
             <p><strong>Duration:</strong> {film.duration}</p>
             <p><strong>IMDb Rating:</strong> {film.imdb_rating}/10</p>
