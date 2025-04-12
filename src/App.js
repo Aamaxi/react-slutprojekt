@@ -5,7 +5,7 @@ import Film from "./pages/Film.js";
 import Home from "./pages/Home.js";
 import List from "./pages/List.js";
 import Account from "./pages/Account.js"
-import Actor from "./pages/Actor.js"
+import Person from "./pages/Person.js"
 
 export default function App() {
   return (
@@ -16,7 +16,7 @@ export default function App() {
         <Route path="/film" element={<Film />} /> {/* Route for Film */}
         <Route path="/list" element={<List />} /> {/* Route for List */}
         <Route path="/account" element={<Account />} /> {/* Route for Account */}
-        <Route path="/actor" element={<Actor />} /> {/* Route for Actor */}
+        <Route path="/person" element={<Person />} /> {/* Route for Person */}
       </Routes>
     </Router>
   );

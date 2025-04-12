@@ -137,6 +137,62 @@ app.get("/list", (req, res) => {
   });
 });
 
+app.get("/person", (req, res) => {
+  const person_id = req.query.person_id;
+
+  connection.query("SELECT * FROM acted_in WHERE person_id = ?", [person_id], (err, actedResults) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    connection.query("SELECT * FROM directed_in WHERE person_id = ?", [person_id], (err, directedResults) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      connection.query("SELECT * FROM produced_in WHERE person_id = ?", [person_id], (err, producedResults) => {
+        if (err) {
+          res.status(500).json({ error: err.message });
+          return;
+        }
+        connection.query("SELECT * FROM written_in WHERE person_id = ?", [person_id], (err, writtenResults) => {
+          if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+          }
+          connection.query("SELECT * FROM films", (err, filmsResults) => {
+            if (err) {
+              res.status(500).json({ error: err.message });
+              return;
+            }
+            connection.query("SELECT * FROM people WHERE person_id = ?", [person_id], (err, personResults) => {
+              if (err) {
+                res.status(500).json({ error: err.message });
+                return;
+              }
+
+              const creditsResults = {
+                actor: actedResults,
+                director: directedResults,
+                producer: producedResults,
+                writter: writtenResults,
+              };
+
+              res.json({
+                credits: creditsResults,
+                films: filmsResults,
+                person: personResults
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
+
+
+
 
 
 app.post("/register", (req, res) => {
