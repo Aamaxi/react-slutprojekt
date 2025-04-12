@@ -1,6 +1,6 @@
 import FilmInfo from "../components/film/FilmInfo.jsx"
 import Credits from "../components/film/Credits.jsx"
-import Comment from "../components/film/Comment.jsx"
+import Comments from "../components/film/Comments.jsx"
 
 export default function Flim() {
   return(
@@ -8,7 +8,7 @@ export default function Flim() {
       <main>
         <FilmInfo />
         <Credits />
-        <Comment />
+        <Comments />
       </main>
     </div>
   );

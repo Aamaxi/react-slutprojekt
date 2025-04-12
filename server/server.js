@@ -63,35 +63,42 @@ app.get("/film", (req, res) => {
                 return;
               }
 
-              console.log(writtenResults)
-              // Combine all credits into a single object
-              const creditsResults = {
-                acted: actedResults.map((acted) => ({
-                  actor_name: acted.actor_name,
-                  role: acted.role,
-                })),
-                directed: directedResults.map((directed) => ({
-                  director_name: directed.director_name,
-                })),
-                produced: producedResults.map((produced) => ({
-                  producer_name: produced.producer_name,
-                })),
-                written: writtenResults.map((written) => ({
-                  writer_name: written.writer_name,
-                })),
-              };
+              connection.query("SELECT * FROM reviews", [film_id], (err, reviewsResults) => {
+                if (err) {
+                  res.status(500).json({ error: err.message });
+                  return;
+                }
 
-            // Send the response after all queries complete
-            res.json({
-              film: filmResults[0], // Assuming filmResults is an array with one item
-              credits: creditsResults,
-              people: peopleResults
-            });
-          });
-        });
-      });
-    });
-  });
+                connection.query("SELECT * FROM users", [film_id], (err, usersResults) => {
+                  if (err) {
+                    res.status(500).json({ error: err.message });
+                    return;
+                  }
+
+                  // Combine all credits into a single object
+                  const creditsResults = {
+                    acted: actedResults,
+                    directed: directedResults,
+                    produced: producedResults,
+                    written: writtenResults
+                  };
+
+                  // Send the response after all queries complete
+                  res.json({
+                    film: filmResults[0], // Assuming filmResults is an array with one item
+                    credits: creditsResults,
+                    people: peopleResults,
+                    reviews: reviewsResults,
+                    users: usersResults
+                  });
+                });
+              });
+            }); // Closing for connection.query("SELECT * FROM people")
+          }); // Closing for connection.query("SELECT * FROM written_in")
+        }); // Closing for connection.query("SELECT * FROM produced_in")
+      }); // Closing for connection.query("SELECT * FROM directed_in")
+    }); // Closing for connection.query("SELECT * FROM acted_in")
+  }); // Closing for connection.query("SELECT * FROM films")
 });
 
 
@@ -205,7 +212,6 @@ app.post("/login", (req, res) => {
     });
   });
   });
-
 
 
 

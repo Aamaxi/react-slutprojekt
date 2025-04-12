@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from "react-router-dom"; // To access URL query parameters
 
-export default function Credits() {
+export default function Comments() {
   const [filmData, setFilmData] = useState(null);
   const [filmId, setFilmId] = useState(null);
 
@@ -34,39 +34,30 @@ export default function Credits() {
     return <p>Loading...</p>; // Prevent rendering before data is fetched
   }
 
-  const { credits, people } = filmData; // Destructure credits and people from filmData
+  const { reviews, users } = filmData; // Destructure reviews and users from filmData
 
-  const getRealName = (personId) => {
-    const person = people.find((p) => p.person_id === personId);
-    return person ? person.name : "Unknown";
-  };
-
-  const renderSection = (title, data, isActor = false) => {
-    if (!data || data.length === 0) return null;
-
-    return (
-      <div>
-        <h3>{title}</h3>
-        <ul>
-          {data.map((credit, index) => (
-            <li key={index}>
-              {isActor
-                ? `${getRealName(credit.person_id)} as ${credit.role}` // For actors, show "real name as role"
-                : getRealName(credit.person_id) // For others, show only the real name
-              }
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
+  // Function to get the username for a given user_id
+  const getUsername = (userId) => {
+    const user = users.find((u) => u.user_id === userId);
+    return user ? user.username : "Unknown User";
   };
 
   return (
-    <div className="credits-container">
-      {renderSection("Actors", credits.acted, true)}
-      {renderSection("Directors", credits.directed)}
-      {renderSection("Producers", credits.produced)}
-      {renderSection("Writers", credits.written)}
+    <div className="comments-container">
+      <h2>Reviews</h2>
+      {reviews && reviews.length > 0 ? (
+        reviews.map((review) => (
+          <div key={review.review_id} className="comment-box">
+            <h3>{review.header}</h3>
+            <p><strong>Rating:</strong> {review.number_rating}/10</p>
+            <p>{review.description}</p>
+            <p><strong>By:</strong> {getUsername(review.user_id)}</p>
+            <p>{review.created_at}</p>
+          </div>
+        ))
+      ) : (
+        <p>No reviews available for this film.</p>
+      )}
     </div>
   );
 }
