@@ -46,15 +46,17 @@ export default function Comments() {
     <div className="comments-container">
       <h2>Reviews</h2>
       {reviews && reviews.length > 0 ? (
-        reviews.map((review) => (
-          <div key={review.review_id} className="comment-box">
-            <h3>{review.header}</h3>
-            <p><strong>Rating:</strong> {review.number_rating}/10</p>
-            <p>{review.description}</p>
-            <p><strong>By:</strong> {getUsername(review.user_id)}</p>
-            <p>{review.created_at}</p>
-          </div>
-        ))
+        reviews
+          .filter((review) => review.film_id === parseInt(filmId)) // Filter reviews by film_id
+          .map((review) => (
+            <div key={review.review_id} className="comment-box">
+              <h3>{review.header}</h3>
+              <p><strong>Rating:</strong> {review.number_rating}/10</p>
+              <p>{review.description}</p>
+              <p><strong>By:</strong> {getUsername(review.user_id)}</p>
+              <p>{review.created_at}</p>
+            </div>
+          ))
       ) : (
         <p>No reviews available for this film.</p>
       )}

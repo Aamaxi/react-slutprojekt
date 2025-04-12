@@ -104,7 +104,6 @@ app.get("/film", (req, res) => {
 
 app.get("/list", (req, res) => {
   const list_id = req.query.list_id;
-  console.log("Received list_id: ", list_id);
 
   // First query to get the list details
   connection.query("SELECT * FROM lists WHERE list_id = ?", [list_id], (err, listResults) => {
@@ -120,10 +119,19 @@ app.get("/list", (req, res) => {
         return;
       }
 
-      // Send the response after both queries complete
-      res.json({
-        list: listResults,
-        listFilms: listFilmsResults,
+      connection.query("SELECT * FROM films", [list_id], (err, filmsResults) => {
+        if (err) {
+          res.status(500).json({ error: err.message });
+          return;
+        }
+  
+
+        // Send the response after both queries complete
+        res.json({
+          list: listResults,
+          listFilms: listFilmsResults,
+          films: filmsResults
+        });
       });
     });
   });

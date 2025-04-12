@@ -33,12 +33,25 @@ export default function FilmInfo() {
     }
   }, [location.search]); // Re-run when URL changes (film_id in the query string)
 
-  if (!filmData) {  
+  if (!filmData) {
     return <p>Loading...</p>; // Prevent rendering before data is fetched
   }
 
-  const film = filmData.film; // Assuming data is returned as an array and the film is the first item
-  
+  const { reviews } = filmData; // Destructure reviews from filmData
+
+  // Function to calculate the average rating
+  const calculateAverageRating = () => {
+    const filteredReviews = reviews.filter((review) => review.film_id === parseInt(filmId)); // Filter reviews by film_id
+    if (filteredReviews.length === 0) return "No ratings available"; // Handle case with no reviews
+
+    const totalRating = filteredReviews.reduce((sum, review) => sum + review.number_rating, 0); // Sum up all ratings
+    return (totalRating / filteredReviews.length).toFixed(1); // Calculate and return the average
+  };
+
+  const averageRating = calculateAverageRating(); // Get the average rating
+
+  const film = filmData.film; // Assuming data is returned as an object
+
   return (
     <div className="film-container">
       <div className="film-top-container">
@@ -49,7 +62,7 @@ export default function FilmInfo() {
         <div>
           <span>
             <img src="/icons/star.svg" alt="Star" />
-            <p>{film.rating}/10</p>
+            <p>{averageRating}/10</p>
           </span>
           <a>Give your rating</a>
         </div>
