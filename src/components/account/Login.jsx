@@ -1,15 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
+import ProtectedComponent from "../ProtectedComponent.jsx";
 
 export default function Login() {
   const [form, setForm] = useState({
-    username: "",
     email: "",
     password: "",
   });
-  
-
   const [message, setMessage] = useState("");
+  const [username, setUsername] = useState(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,52 +18,62 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      // Replace with your backend endpoint
-      console.log("FORM", form);
       const response = await axios.post("http://localhost:5000/login", form);
-      setMessage("Login successful!");
+      const { token, username } = response.data;      
+
+      if (username) {
+        // Save token to local storage
+        localStorage.setItem("token", token);
+        setUsername(username);
+        setMessage("Login successful!");
+      } else {
+        setMessage("Login failed: Username not found.");
+      }
     } catch (error) {
       setMessage("Failed to log in.");
       console.error(error);
     }
   };
 
-  return(
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUsername(null);
+    setMessage("Logged out successfully.");
+  };
 
-      <label htmlFor="username">Username:</label><br />
-      <input
-        type="text"
-        id="username"
-        name="username"
-        value={form.username}
-        onChange={handleChange}
-        required
-      /><br /><br />
-
-      <label htmlFor="email">Email:</label><br />
-      <input
-        type="email"
-        id="email"
-        name="email"
-        value={form.email}
-        onChange={handleChange}
-        required
-      /><br /><br />
-
-      <label htmlFor="password">Password:</label><br />
-      <input
-        type="password"
-        id="password"
-        name="password"
-        value={form.password}
-        onChange={handleChange}
-        required
-      /><br /><br />
-
-      <button type="submit">Login</button>
+  return (
+    <div>
+      <ProtectedComponent />
+      {!username ? (
+        <form onSubmit={handleSubmit}>
+          <h2>Login</h2>
+          <label>Email:</label>
+          <input
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+          <br />
+          <label>Password:</label>
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+          <br />
+          <button type="submit">Login</button>
+        </form>
+      ) : (
+        <div>
+          <p>Welcome, {username || "Guest"}!</p>
+          <button onClick={handleLogout}>Logout</button>
+        </div>
+      )}
       <p>{message}</p>
-    </form>
+    </div>
   );
 }

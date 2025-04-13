@@ -4,10 +4,10 @@ const app = express();
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const SECRET_KEY ="your-secret-key";
+const SECRET_KEY = "your-secret-key";
 
 app.use(cors());
-app.use(express.json())
+app.use(express.json());
 
 app.use(cors({
   origin: 'http://localhost:3000', // your frontend port
@@ -236,9 +236,9 @@ app.post("/register", (req, res) => {
         return;
       }
 
-      // Insert the user into the database with the hashed password and salt
-      const query = "INSERT INTO users (username, email, password, salt) VALUES (?, ?, ?, ?)";
-      connection.query(query, [username, email, hashedPassword, salt], (err, results) => {
+      // Insert the user into the database with the hashed password
+      const query = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+      connection.query(query, [username, email, hashedPassword], (err, results) => {
         if (err) {
           console.error("Error inserting user:", err);
           res.status(500).json({ error: "Failed to create account." });
@@ -272,7 +272,7 @@ app.post("/login", (req, res) => {
       res.status(401).json({ error: "Invalid email or password." });
       return;
     }
-    console.log("results: ", results)
+
     const user = results[0];
 
     // Compare the provided password with the hashed password in the database
@@ -288,13 +288,34 @@ app.post("/login", (req, res) => {
         return;
       }
 
+      // Generate JWT
+      const token = jwt.sign(
+        { id: user.id, email: user.email, username: user.username },
+        SECRET_KEY,
+        { expiresIn: "1m" } // Token expires in 1 hour
+      );
+      console.log("sdlfh", token)
       // Successful login
-      res.status(200).json({ message: "Login successful!", user: { id: user.id, username: user.username, email: user.email } });
-      
+      res.status(200).json({ message: "Login successful!", token, username: user.username });
     });
   });
+});
+
+// Middleware to verify JWT
+const authenticateToken = (req, res, next) => {
+  const token = req.headers["authorization"];
+  if (!token) return res.status(401).json({ error: "Access denied." });
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) return res.status(403).json({ error: "Invalid token." });
+    req.user = user; // Attach user info to the request
+    next();
   });
+};
 
-
+// Protected route example
+app.get("/protected", authenticateToken, (req, res) => {
+  res.json({ message: "This is a protected route.", user: req.user });
+});
 
 app.listen(5000, () => console.log("Server running at http://localhost:5000"));
