@@ -1,6 +1,7 @@
 import FilmPictures from "./FilmPictures.jsx";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"; // To access URL query parameters
+import AddButton from "./AddButton.jsx";
 
 export default function FilmInfo() {
   const [filmData, setFilmData] = useState(null);
@@ -77,10 +78,7 @@ export default function FilmInfo() {
         <div>
           <p className="film-text">{film.description}</p>
           <div className="film-bottom-buttons-container rating-text">
-            <button className="film-add-button">
-              <img src="/icons/add.svg" alt="Add icon" className="button-add-icon" />
-              <p>Add to button</p>
-            </button>
+            <AddButton />
             <span className="film-rating">
               <img src="/icons/metacritic.svg" alt="Metacritic logo" className="rating-icon" />
               <p>{film.metacritic}</p>
