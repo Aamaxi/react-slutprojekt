@@ -220,15 +220,65 @@ app.get("/addtolist", authenticateToken,  (req, res) => {
         res.status(500).json({ error: err.message });
         return;
       }
+      connection.query("SELECT * FROM list_films", (err, listFilmsResults) => {
+        if (err) {
+          res.status(500).json({ error: err.message });
+          return;
+        }
     
 
-    res.json({
-      lists: listsResults,
-      userLists: userResults
+        res.json({
+          lists: listsResults,
+          userLists: userResults,
+          listFilms: listFilmsResults
+        })  
       })
     })
   })
 })
+
+app.post("/changelist", (req, res) => {
+  const { selectedLists, filmId } = req.body;
+
+  console.log("Selected Lists:", selectedLists);
+  console.log("Film ID:", filmId);
+
+  // Loop through the selectedLists array
+  selectedLists.forEach((action) => {
+    if (action.added) {
+      // If the action is "added", insert into the list_films table
+      connection.query(
+        "INSERT INTO list_films (list_id, film_id) VALUES (?, ?)",
+        [action.added, filmId],
+        (err, results) => {
+          if (err) {
+            console.error("Error adding film to list:", err);
+            return res.status(500).json({ error: "Failed to add film to list." });
+          }
+          console.log(`Film added to list_id ${action.added}`);
+        }
+      );
+    } else if (action.deleted) {
+      // If the action is "deleted", delete from the list_films table
+      connection.query(
+        "DELETE FROM list_films WHERE list_id = ? AND film_id = ?",
+        [action.deleted, filmId],
+        (err, results) => {
+          if (err) {
+            console.error("Error removing film from list:", err);
+            return res.status(500).json({ error: "Failed to remove film from list." });
+          }
+          console.log(`Film removed from list_id ${action.deleted}`);
+        }
+      );
+    }
+  });
+
+  // Send a success response after processing all actions
+  res.status(200).json({ message: "Changes processed successfully." });
+});
+
+
 
 app.get("/list", (req, res) => {
   const list_id = req.query.list_id;

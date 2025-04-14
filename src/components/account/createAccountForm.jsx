@@ -18,7 +18,6 @@ export default function CreateAccountForm() {
     e.preventDefault();
 
     try {
-      // Replace with your backend endpoint
       console.log("FORM", form)
       const response = await axios.post("http://localhost:5000/register", form);
       setMessage("Account created successfully!");
