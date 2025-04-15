@@ -8,6 +8,7 @@ export default function Footer() {
       <a href="" className="Footer-link">Log in</a>
       <span className="Footer-line"></span>
       <p>© IMDb klon</p>
+      <button className="btn">Default</button>
     </footer>
   );
 }

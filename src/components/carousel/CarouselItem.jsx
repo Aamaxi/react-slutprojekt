@@ -20,8 +20,9 @@ export default function CarouselItem() {
     return <p>Loading...</p>;
   }
 
-  const film = filmData[0]; // Assuming data is returned as an array
+  const film = filmData.film; // Assuming data is returned as an array
 
+  console.log("filmdata", filmData)
   return (
     <div className="Carousel-item-container">
       <img src={`/film_posters/${film.film_id}.png`} alt={film.title} className="Carousel-item-img" />
