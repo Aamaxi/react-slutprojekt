@@ -45,9 +45,9 @@ export default function Credits() {
     if (!data || data.length === 0) return null;
 
     return (
-      <div>
+      <div className="flex items-center gap-5">
         <h3>{title}</h3>
-        <ul>
+        <ul className="flex gap-4">
           {data.map((credit, index) => (
             <li key={index}>
               {isActor
@@ -63,10 +63,15 @@ export default function Credits() {
 
   return (
     <div className="credits-container">
+      <div class="border-t border-gray-200 w-full my-4"></div>
       {renderSection("Actors", credits.acted, true)}
+      <div class="border-t border-gray-200 w-full my-4"></div>
       {renderSection("Directors", credits.directed)}
+      <div class="border-t border-gray-200 w-full my-4"></div>
       {renderSection("Producers", credits.produced)}
+      <div class="border-t border-gray-200 w-full my-4"></div>
       {renderSection("Writers", credits.written)}
+      <div class="border-t border-gray-200 w-full my-4"></div>
     </div>
   );
 }

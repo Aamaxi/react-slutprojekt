@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function AddButton() {
-  const [showCheckboxes, setShowCheckboxes] = useState(false);
+  const [showModal, setShowModal] = useState(false); // Track modal visibility
   const [lists, setLists] = useState(null);
   const [userLists, setUserLists] = useState(null);
   const [listFilms, setlistFilms] = useState(null);
@@ -12,7 +12,6 @@ export default function AddButton() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
 
     if (!token) {
       console.error("No token found");
@@ -41,10 +40,6 @@ export default function AddButton() {
       });
   }, []);
 
-  const handleButtonClick = () => {
-    setShowCheckboxes(!showCheckboxes);
-  };
-
   const handleCheckboxChange = (listId, isDelete) => {
     setSelectedLists((prevSelected) => {
       if (isDelete) {
@@ -59,15 +54,14 @@ export default function AddButton() {
 
   const handleSubmit = () => {
     console.log("Selected Lists:", selectedLists); // Log the selected list actions
-    setShowCheckboxes(false); // Hide the checkboxes after submission
+    setShowModal(false); // Close the modal after submission
     sendLists();
   };
 
   const sendLists = async () => {
     try {
-      console.log()
       const response = await axios.post("http://localhost:5000/changelist", {
-        selectedLists, 
+        selectedLists,
         filmId,
       });
       console.log("Lists sent:", response.data);
@@ -77,40 +71,70 @@ export default function AddButton() {
   };
 
   if (!isLoggedIn()) {
-    return <button>You must be logged in</button>;
+    return (
+      <div className="tooltip tooltip-bottom" data-tip="You must be logged in">
+        <button className="btn">Add film to lists</button>
+      </div>
+    );
   }
 
   return (
     <div>
-      <button onClick={handleButtonClick}>
-        {showCheckboxes ? "Hide Options" : "Add film to list"}
+      {/* Button to open the modal */}
+      <button className="btn" onClick={() => setShowModal(true)}>
+        Add film to list
       </button>
-      {showCheckboxes && (
-        <div>
-          {userLists &&
-            userLists.map((userList) => {
-              // Find the corresponding list in the `lists` array
-              const list = lists?.find((listItem) => listItem.list_id === userList.list_id);
-              if (!list) return null; // Skip if no matching list is found
 
-              // Check if the current film_id is already in the list
-              const isFilmInList = listFilms?.some(
-                (listFilm) => listFilm.list_id === userList.list_id && listFilm.film_id === parseInt(filmId)
-              );
+      {/* Modal */}
+      {showModal && (
+        <div className="modal modal-open">
+          <div className="modal-box relative">
+            {/* Close button */}
+            <button
+              className="btn btn-sm btn-circle absolute right-2 top-2"
+              onClick={() => setShowModal(false)}
+            >
+              ✕
+            </button>
+            <h3 className="text-lg font-bold">Add Film to Lists</h3>
+            <div className="mt-4">
+              {userLists &&
+                userLists.map((userList) => {
+                  // Find the corresponding list in the `lists` array
+                  const list = lists?.find(
+                    (listItem) => listItem.list_id === userList.list_id
+                  );
+                  if (!list) return null; // Skip if no matching list is found
 
-              return (
-                <label key={userList.list_id}>
-                  <input
-                    type="checkbox"
-                    onChange={() => handleCheckboxChange(userList.list_id, isFilmInList)} // Handle checkbox toggle
-                  />
-                  {list.name} {/* Display the name of the list */}
-                  {isFilmInList && <span style={{ color: "red", marginLeft: "10px" }}>Delete</span>}
-                </label>
-              );
-            })}
-          <br />
-          <button onClick={handleSubmit}>Submit</button> {/* Submit button */}
+                  // Check if the current film_id is already in the list
+                  const isFilmInList = listFilms?.some(
+                    (listFilm) =>
+                      listFilm.list_id === userList.list_id &&
+                      listFilm.film_id === parseInt(filmId)
+                  );
+
+                  return (
+                    <label key={userList.list_id} className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        onChange={() =>
+                          handleCheckboxChange(userList.list_id, isFilmInList)
+                        } // Handle checkbox toggle
+                      />
+                      {list.name} {/* Display the name of the list */}
+                      {isFilmInList && (
+                        <span className="text-red-500 ml-2">Delete</span>
+                      )}
+                    </label>
+                  );
+                })}
+            </div>
+            <div className="modal-action">
+              <button className="btn" onClick={handleSubmit}>
+                Update lists
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

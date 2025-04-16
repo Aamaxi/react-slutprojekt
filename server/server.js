@@ -4,6 +4,8 @@ const app = express();
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
 const SECRET_KEY = "your-secret-key";
 
 app.use(cors());
@@ -204,6 +206,34 @@ app.get("/film", (req, res) => {
       }); // Closing for connection.query("SELECT * FROM directed_in")
     }); // Closing for connection.query("SELECT * FROM acted_in")
   }); // Closing for connection.query("SELECT * FROM films")
+});
+
+app.get("/film_images", (req, res) => {
+  const filmId = req.query.film_id; // Get the film_id from the query parameter
+  const folderPath = path.join(__dirname, "..", "public", "film_images", filmId);
+  console.log(folderPath)
+  // Check if the folder exists
+  if (!fs.existsSync(folderPath)) {
+    return res.status(404).json({ error: "Folder not found" });
+  }
+
+  // Read all files in the folder
+  fs.readdir(folderPath, (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to read folder" });
+    }
+
+    // Filter only image files (optional)
+    const imageFiles = files.filter((file) =>
+      /\.(jpg|jpeg|png|gif|webp)$/i.test(file)
+    );
+
+    // Return the list of image file paths
+    const imagePaths = imageFiles.map((file) =>
+      `/film_images/${filmId}/${file}`
+    );
+    res.json({ images: imagePaths });
+  });
 });
 
 
