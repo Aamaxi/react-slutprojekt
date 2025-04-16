@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 
-export default function CarouselItem() {
+export default function CarouselItem({ filmId }) {
   const [filmData, setFilmData] = useState(null);
-  const filmId = 1; // You can change this to any specific film ID
 
   useEffect(() => {
     fetch(`http://localhost:5000/film?film_id=${filmId}`)
@@ -20,18 +19,24 @@ export default function CarouselItem() {
     return <p>Loading...</p>;
   }
 
-  const film = filmData.film; // Assuming data is returned as an array
-
-  console.log("filmdata", filmData)
+  const film = filmData.film; // Assuming data is returned as an object
+  
   return (
-    <div className="Carousel-item-container">
-      <img src={`/film_posters/${film.film_id}.png`} alt={film.title} className="Carousel-item-img" />
-      
-      <span className="Carousel-item-span-container"> 
-        <img src="/icons/star.svg" alt="Star" />
-        <p>{film.rating}/10</p>
-      </span>
-      <p>{film.name}</p>
+    <div className="card bg-base-100 w-96 shadow-sm">
+      <figure>
+        <img
+          src={`/film_posters/${film.film_id}.png`}
+          alt={film.name}
+          className="w-full h-auto"
+        />
+      </figure>
+      <div className="card-body">
+        <h2 className="card-title">{film.name}</h2>
+        <p>{film.description}</p>
+        <div className="card-actions justify-end">
+          <button className="btn btn-primary">View Details</button>
+        </div>
+      </div>
     </div>
   );
 }

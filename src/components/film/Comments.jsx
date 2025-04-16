@@ -42,18 +42,24 @@ export default function Comments() {
   };
 
   return (
-    <div className="comments-container">
-      <h2>Reviews</h2>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-2xl">Reviews</h2>
       {reviews && reviews.length > 0 ? (
         reviews
           .filter((review) => review.film_id === parseInt(filmId)) // Filter reviews by film_id
           .map((review) => (
-            <div key={review.review_id} className="comment-box">
-              <h3>{review.header}</h3>
-              <p><strong>Rating:</strong> {review.number_rating}/10</p>
-              <p>{review.description}</p>
-              <p><strong>By:</strong> {getUsername(review.user_id)}</p>
-              <p>{review.created_at}</p>
+            <div className="card card-border">
+              <div key={review.review_id} className="card-body">
+               <div className="gap-0">
+                  <div className="flex place-content-between items-center">
+                    <h3 className="card-title">{review.header}</h3>
+                    <p>Rating: {review.number_rating}/10</p>
+                  </div>
+                <p>By: {getUsername(review.user_id)}</p>
+                </div>
+                <p>{review.description}</p>
+                <p>{review.created_at}</p>
+              </div>
             </div>
           ))
       ) : (

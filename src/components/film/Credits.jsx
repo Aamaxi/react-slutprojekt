@@ -46,7 +46,7 @@ export default function Credits() {
 
     return (
       <div className="flex items-center gap-5">
-        <h3>{title}</h3>
+        <h3 className="text-xl font-bold">{title}</h3>
         <ul className="flex gap-4">
           {data.map((credit, index) => (
             <li key={index}>
@@ -62,7 +62,7 @@ export default function Credits() {
   };
 
   return (
-    <div className="credits-container">
+    <div className="w-full">
       <div class="border-t border-gray-200 w-full my-4"></div>
       {renderSection("Actors", credits.acted, true)}
       <div class="border-t border-gray-200 w-full my-4"></div>

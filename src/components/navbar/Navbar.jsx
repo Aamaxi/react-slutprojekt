@@ -45,9 +45,7 @@ export default function Navbar() {
 
       <SearchBar />
       <div className="navbar-end">
-        <Link to="/login" className="btn">
-          Log in
-        </Link>
+        <LoginButton />
       </div>
     </div>
   );

@@ -6,7 +6,6 @@ export default function Home() {
     <div className="App">
       <main>
         <Carousel />
-        <Carousel />
       </main>
       <Footer />
     </div>

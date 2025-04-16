@@ -33,7 +33,7 @@ export default function FilmPictures() {
   }
 
   return (
-    <div className="carousel w-full">
+    <div className="carousel full-w">
       {images.map((image, index) => (
         <div
           key={index}

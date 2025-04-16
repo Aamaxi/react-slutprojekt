@@ -69,13 +69,13 @@ export default function FilmInfo() {
         </div>
       </div>
       <FilmPictures />
-      <div className="flex items-center">
+      <div className="flex items-center gap-6">
         <img
-          className="w-100"
+          className="w-50"
           src={`/film_posters/${film.film_id}.png`} // Dynamic poster based on film_id
           alt="Poster"
         />
-        <div>
+        <div className="flex flex-col gap-3">
           <p>{film.description}</p>
           <div className="flex gap-4">
             <AddButton />

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
-import ProtectedComponent from "../ProtectedComponent";
 
-export default function Login() {
+export default function LoginForm() {
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -19,7 +18,7 @@ export default function Login() {
 
     try {
       const response = await axios.post("http://localhost:5000/login", form);
-      const { token, username } = response.data;      
+      const { token, username } = response.data;
 
       if (username) {
         // Save token to local storage
@@ -42,38 +41,49 @@ export default function Login() {
   };
 
   return (
-    <div>
-      <ProtectedComponent />
+    <div className="flex justify-center items-center min-h-screen bg-base-100">
       {!username ? (
-        <form onSubmit={handleSubmit}>
-          <h2>Login</h2>
-          <label>Email:</label>
+        <form
+          onSubmit={handleSubmit}
+          className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box"
+        >
+          <legend className="fieldset-legend text-lg font-bold mb-4">Login</legend>
+
+          <label className="fieldset-label block mb-2">Email</label>
           <input
             type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
+            className="input input-bordered w-full mb-4"
+            placeholder="Email"
             required
           />
-          <br />
-          <label>Password:</label>
+
+          <label className="fieldset-label block mb-2">Password</label>
           <input
             type="password"
             name="password"
             value={form.password}
             onChange={handleChange}
+            className="input input-bordered w-full mb-4"
+            placeholder="Password"
             required
           />
-          <br />
-          <button type="submit">Login</button>
+
+          <button type="submit" className="btn btn-neutral w-full">
+            Login
+          </button>
         </form>
       ) : (
-        <div>
-          <p>Welcome, {username || "Guest"}!</p>
-          <button onClick={handleLogout}>Logout</button>
+        <div className="text-center">
+          <p className="mb-4">Welcome, {username || "Guest"}!</p>
+          <button onClick={handleLogout} className="btn btn-neutral">
+            Logout
+          </button>
         </div>
       )}
-      <p>{message}</p>
+      <p className="mt-4 text-center text-sm text-error">{message}</p>
     </div>
   );
 }

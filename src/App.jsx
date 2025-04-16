@@ -4,8 +4,10 @@ import Navbar from "./components/navbar/Navbar";
 import Film from "./pages/Film";
 import Home from "./pages/Home";
 import List from "./pages/List";
-import Account from "./pages/Account"
-import Person from "./pages/Person"
+import Account from "./pages/Account";
+import Person from "./pages/Person";
+import Login from "./pages/Login";
+import CreateAccount from "./pages/createaccount";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="/list" element={<List />} />
         <Route path="/account" element={<Account />} />
         <Route path="/person" element={<Person />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/createaccount" element={<CreateAccount />} />
         <Route path="*" element={<p>Page not found</p>} /> {/* Catch-all route */}
       </Routes>
     </Router>
