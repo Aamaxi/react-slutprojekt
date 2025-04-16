@@ -20,9 +20,12 @@ export default function CarouselItem({ filmId }) {
   }
 
   const film = filmData.film; // Assuming data is returned as an object
-  
+
   return (
-    <div className="card bg-base-100 w-96 shadow-sm">
+    <a
+      href={`/film/${film.film_id}`} // Link to the film's page
+      className="card bg-base-100 w-60 shadow-sm hover:bg-base-200 transition-colors duration-300"
+    >
       <figure>
         <img
           src={`/film_posters/${film.film_id}.png`}
@@ -32,11 +35,11 @@ export default function CarouselItem({ filmId }) {
       </figure>
       <div className="card-body">
         <h2 className="card-title">{film.name}</h2>
-        <p>{film.description}</p>
+        <p className="text-sm line-clamp-3">{film.description}</p>
         <div className="card-actions justify-end">
-          <button className="btn btn-primary">View Details</button>
+          <button className="btn btn-primary">View details</button>
         </div>
       </div>
-    </div>
+    </a>
   );
 }

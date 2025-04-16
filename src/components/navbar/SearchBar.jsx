@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 export default function SearchBar() {
   const [searchValue, setSearchValue] = useState("");
@@ -6,6 +7,7 @@ export default function SearchBar() {
   const [filteredSearchables, setFilteredSearchables] = useState([]); // Initialize as an empty array
   const [isLoading, setIsLoading] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false); // Track dropdown visibility
+  const navigate = useNavigate(); // React Router's navigation hook
 
   useEffect(() => {
     setIsLoading(true);
@@ -55,6 +57,15 @@ export default function SearchBar() {
     setTimeout(() => setIsDropdownVisible(false), 200); // Delay to allow clicking on dropdown items
   };
 
+  const handleItemClick = (item) => {
+    console.log(item);
+    if (item.film_id) {
+      navigate(`/film?film_id=${item.film_id}`); // Navigate to the film page
+    } else if (item.person_id) {
+      navigate(`/person?person_id=${item.person_id}`); // Navigate to the person page
+    }
+  };
+
   return (
     <div className="relative w-full">
       <label className="input w-full">
@@ -92,7 +103,12 @@ export default function SearchBar() {
           {/* Limit the results to the top 5 */}
           {filteredSearchables.slice(0, 5).map((item, index) => (
             <li key={index}>
-              <a>{item.name || item.title}</a>
+              <a
+                onClick={() => handleItemClick(item)} // Handle navigation on click
+                className="cursor-pointer"
+              >
+                {item.name || item.title}
+              </a>
             </li>
           ))}
           {filteredSearchables.length === 0 && searchValue && (
