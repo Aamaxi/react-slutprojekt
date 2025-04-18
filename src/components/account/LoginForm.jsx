@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginForm() {
   const [form, setForm] = useState({
@@ -7,7 +8,7 @@ export default function LoginForm() {
     password: "",
   });
   const [message, setMessage] = useState("");
-  const [username, setUsername] = useState(null);
+  const { login } = useAuth(); // Use the login function from AuthContext
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,9 +22,7 @@ export default function LoginForm() {
       const { token, username } = response.data;
 
       if (username) {
-        // Save token to local storage
-        localStorage.setItem("token", token);
-        setUsername(username);
+        login(token); // Call the login function to update the global state
         setMessage("Login successful!");
       } else {
         setMessage("Login failed: Username not found.");
@@ -34,55 +33,40 @@ export default function LoginForm() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUsername(null);
-    setMessage("Logged out successfully.");
-  };
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-base-100">
-      {!username ? (
-        <form
-          onSubmit={handleSubmit}
-          className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box"
-        >
-          <legend className="fieldset-legend text-lg font-bold mb-4">Login</legend>
+      <form
+        onSubmit={handleSubmit}
+        className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box"
+      >
+        <legend className="fieldset-legend text-lg font-bold mb-4">Login</legend>
 
-          <label className="fieldset-label block mb-2">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            className="input input-bordered w-full mb-4"
-            placeholder="Email"
-            required
-          />
+        <label className="fieldset-label block mb-2">Email</label>
+        <input
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          className="input input-bordered w-full mb-4"
+          placeholder="Email"
+          required
+        />
 
-          <label className="fieldset-label block mb-2">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            className="input input-bordered w-full mb-4"
-            placeholder="Password"
-            required
-          />
+        <label className="fieldset-label block mb-2">Password</label>
+        <input
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+          className="input input-bordered w-full mb-4"
+          placeholder="Password"
+          required
+        />
 
-          <button type="submit" className="btn btn-neutral w-full">
-            Login
-          </button>
-        </form>
-      ) : (
-        <div className="text-center">
-          <p className="mb-4">Welcome, {username || "Guest"}!</p>
-          <button onClick={handleLogout} className="btn btn-neutral">
-            Logout
-          </button>
-        </div>
-      )}
+        <button type="submit" className="btn btn-neutral w-full">
+          Login
+        </button>
+      </form>
       <p className="mt-4 text-center text-sm text-error">{message}</p>
     </div>
   );

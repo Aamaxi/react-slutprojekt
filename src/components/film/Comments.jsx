@@ -53,7 +53,7 @@ export default function Comments() {
                <div className="gap-0">
                   <div className="flex place-content-between items-center">
                     <h3 className="card-title">{review.header}</h3>
-                    <p>Rating: {review.number_rating}/10</p>
+                    <p>Rating: {review.number_rating}/5</p>
                   </div>
                 <p>By: {getUsername(review.user_id)}</p>
                 </div>

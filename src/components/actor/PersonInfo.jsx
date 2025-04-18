@@ -1,60 +1,50 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"; // To access URL query parameters
+import { useLocation } from "react-router-dom";
+import FilmPictures from "../film/FilmPictures";
 
 export default function PersonInfo() {
   const [personData, setPersonData] = useState(null);
   const [personId, setPersonId] = useState(null);
 
-  const location = useLocation(); // Get the location of the current URL
+  const location = useLocation();
 
-  // Function to extract the query parameter 'person_id' from the URL
   const getPersonIdFromQuery = () => {
     const urlParams = new URLSearchParams(location.search);
     return urlParams.get("person_id");
   };
 
   useEffect(() => {
-    const personIdFromQuery = getPersonIdFromQuery(); // Extract person_id from the URL
-    setPersonId(personIdFromQuery); // Set the state for person_id
+    const personIdFromQuery = getPersonIdFromQuery();
+    setPersonId(personIdFromQuery);
 
     if (personIdFromQuery) {
       fetch(`http://localhost:5000/person?person_id=${personIdFromQuery}`)
-        .then(function (response) {
-          return response.json();
+        .then((response) => response.json())
+        .then((data) => {
+          setPersonData(data);
         })
-        .then(function (data) {
-          setPersonData(data); // Set person data from the backend
-        })
-        .catch(function (error) {
+        .catch((error) => {
           console.log(error);
         });
     }
-  }, [location.search]); // Re-run when URL changes (person_id in the query string)
+  }, [location.search]);
 
   if (!personData) {
-    return <p>Loading...</p>; // Prevent rendering before data is fetched
+    return <p>Loading...</p>;
   }
 
   const { credits, person, films } = personData;
 
   const generateFilmList = () => {
     const filmList = [];
-
-    // Iterate over each role category in credits (acted, directed, produced, written)
     for (let role in credits) {
       credits[role].forEach((credit) => {
-        // Find the corresponding film in the films array
         const film = films.find((f) => f.film_id === credit.film_id);
-
         if (film) {
-          // Check if the film is already in the list
           const existingFilm = filmList.find((f) => f.film_id === film.film_id);
-
           if (existingFilm) {
-            // If the film is already in the list, add the role to its roles array
             existingFilm.roles.push(role.charAt(0).toUpperCase() + role.slice(1));
           } else {
-            // If the film is not in the list, add it with the current role
             filmList.push({
               film_id: film.film_id,
               name: film.name,
@@ -65,39 +55,55 @@ export default function PersonInfo() {
         }
       });
     }
-
     return filmList;
   };
 
   const filmList = generateFilmList();
 
-
   const generateCreditsArray = () => {
     let creditsArray = [];
-
     for (let key in credits) {
       if (credits[key].length !== 0) {
-        creditsArray.push(key.charAt(0).toUpperCase() + key.slice(1)); // Capitalize the first letter
+        creditsArray.push(key.charAt(0).toUpperCase() + key.slice(1));
       }
     }
     return creditsArray;
   };
+
   const creditsArray = generateCreditsArray();
 
+
   return (
-    <div className="list-container">
-      <h1>{person[0].name}</h1>
-      <p>{creditsArray.join(" • ")}</p>
-      <img src="" alt="" />
-      <img src="" alt="" />
-      <p>{person[0].description}</p>
-      <ul>
-        {filmList.map((film) => (
-          <li key={film.film_id}>
-            <strong>{film.name}</strong> ({film.year}) - Roles: {film.roles.join(", ")}
-          </li>
-        ))}
-      </ul>
+    <div>
+      <div className="flex place-content-between items-center">
+        <div>
+          <h1 className="text-5xl">{person[0].name}</h1>
+          <p>{creditsArray.join(" • ")}</p>
+        </div>
+        <div className="flex flex-col">
+        </div>
+      </div>
+      <FilmPictures />
+      <div className="flex items-center gap-6 mt-6">
+        <img
+          className="w-50"
+          src={`/person_posters/${personId}.png`}
+          alt="Poster"
+        />
+        <div className="flex flex-col gap-3">
+          <p>{person[0].description}</p>
+        </div>
+      </div>
+      <div className="mt-6">
+        <h3 className="text-2xl font-bold">Filmography</h3>
+        <ul className="mt-4 space-y-2">
+          {filmList.map((film) => (
+            <li key={film.film_id} className="p-4 border rounded-lg bg-base-200">
+              <strong>{film.name}</strong> ({film.year}) - Roles: {film.roles.join(", ")}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

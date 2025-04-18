@@ -1,12 +1,24 @@
-import { Link } from "react-router-dom"; // Import Link from React Router
+import { Link } from "react-router-dom";
+import { isLoggedIn } from "../../utils/authUtils";
 import LoginButton from "./LoginButton";
-import SearchBar from "./SearchBar";
+import CreateAccountButton from "./CreateAccountButton";
+import CreateListButton from "./CreateListButton";
+import SearchBar from "./SearchBar"
 
 export default function Navbar() {
+  const loggedIn = isLoggedIn(); // Check if the user is logged in
+
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
-        <div className="dropdown">
+        <Link to="/" className="btn btn-ghost text-xl">
+          Flicks
+        </Link>
+      </div>
+      <SearchBar />
+
+      <div className="navbar-end">
+        <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -25,27 +37,29 @@ export default function Navbar() {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
           >
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/contact">Contact</Link>
-            </li>
+            {loggedIn ? (
+              <>
+                <li>
+                  <CreateListButton />
+                </li>
+                <li>
+                  <LoginButton />
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <CreateAccountButton />
+                </li>
+                <li>
+                  <LoginButton />
+                </li>
+              </>
+            )}
           </ul>
         </div>
-        <Link to="/" className="btn btn-ghost text-xl">
-          Flicks
-        </Link>
-      </div>
-
-      <SearchBar />
-      <div className="navbar-end">
-        <LoginButton />
       </div>
     </div>
   );

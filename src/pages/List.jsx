@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"; // To access URL query parameters
 import { FaInfoCircle } from "react-icons/fa"; // Import Font Awesome Info Icon
-import Footer from "../components/Footer"
+import Footer from "../components/Footer";
 
 export default function List() {
   const [listData, setListData] = useState(null);
@@ -84,6 +84,10 @@ export default function List() {
     setDropdownLabel(label);
   };
 
+  const toggleSortOrder = () => {
+    setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+  };
+
   return (
     <div>
       <div className="list-container max-w-6xl mx-auto p-4">
@@ -98,7 +102,7 @@ export default function List() {
           <h2 className="text-3xl font-bold mt-4">{currentList.name}</h2>
           <p className="text-gray-600">{currentList.description}</p>
         </div>
-        <div className="mb-4">
+        <div className="mb-4 flex items-center gap-4">
           <div className="dropdown">
             <label tabIndex={0} className="btn btn-outline m-1">
               {dropdownLabel}
@@ -121,24 +125,21 @@ export default function List() {
                   IMDb Rating
                 </button>
               </li>
-              <li>
-                <button
-                  onClick={() =>
-                    setSortOrder(sortOrder === "asc" ? "desc" : "asc")
-                  }
-                >
-                  {sortOrder === "asc" ? "Descending" : "Ascending"}
-                </button>
-              </li>
             </ul>
           </div>
+          <button
+            className="btn btn-outline"
+            onClick={toggleSortOrder}
+          >
+            {sortOrder === "asc" ? "Ascending" : "Descending"}
+          </button>
         </div>
         <div className="flex flex-col gap-6">
           {sortedFilms.map((film, index) => (
             <a
-            href={`/film?film_id=${film.film_id}`}  
-            key={film.film_id}
-              className="film-item flex shadow-md rounded-lg overflow-hidden relative hover:bg-base-200 transiton-colors duration-300"
+              href={`/film?film_id=${film.film_id}`}
+              key={film.film_id}
+              className="film-item flex shadow-md rounded-lg overflow-hidden relative hover:bg-base-200 transition-colors duration-300"
             >
               {/* Poster */}
               <div className="w-40 flex-shrink-0 bg-gray-200">

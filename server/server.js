@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
 const SECRET_KEY = "your-secret-key";
 
 app.use(cors());
@@ -16,6 +17,10 @@ app.use(cors({
   methods: ['GET', 'POST'],
   credentials: true
 }));
+
+const upload = multer({
+  dest: path.join(__dirname, "uploads"), // Temporary folder for uploaded files
+});
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -209,9 +214,19 @@ app.get("/film", (req, res) => {
 });
 
 app.get("/film_images", (req, res) => {
-  const filmId = req.query.film_id; // Get the film_id from the query parameter
-  const folderPath = path.join(__dirname, "..", "public", "film_images", filmId);
-  console.log(folderPath)
+  const filmId = req.query.film_id; // Get film_id from the query parameter
+  const personId = req.query.person_id; // Get person_id from the query parameter
+
+  // Determine the folder path based on the provided parameter
+  let folderPath;
+  if (filmId) {
+    folderPath = path.join(__dirname, "..", "public", "film_images", filmId);
+  } else if (personId) {
+    folderPath = path.join(__dirname, "..", "public", "person_images", personId);
+  } else {
+    return res.status(400).json({ error: "Either film_id or person_id must be provided." });
+  }
+
   // Check if the folder exists
   if (!fs.existsSync(folderPath)) {
     return res.status(404).json({ error: "Folder not found" });
@@ -230,12 +245,86 @@ app.get("/film_images", (req, res) => {
 
     // Return the list of image file paths
     const imagePaths = imageFiles.map((file) =>
-      `/film_images/${filmId}/${file}`
+      `/${filmId ? "film_images" : "person_images"}/${filmId || personId}/${file}`
     );
     res.json({ images: imagePaths });
   });
 });
 
+
+app.get("/user_lists", authenticateToken, (req, res) => {
+  console.log("lskdjfsldkjf lkjsdlkj")
+  const userId = req.user.id;
+
+  const query = `
+    SELECT lists.list_id, lists.name, lists.description
+    FROM lists
+    INNER JOIN user_lists ON lists.list_id = user_lists.list_id
+    WHERE user_lists.user_id = ?
+  `;
+
+  connection.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error("Error fetching user lists:", err);
+      return res.status(500).json({ error: "Failed to fetch user lists." });
+    }
+
+    res.status(200).json({ lists: results });
+  });
+});
+
+
+app.post("/create_list", authenticateToken, upload.single("image"), (req, res) => {
+  console.log("lksdjflkjsd fjfsdjkhsfd hjksdfjhkfdsjjkfh")
+  const { header, description } = req.body;
+  const image = req.file;
+  const userId = req.user.id;
+
+  if (!header || !description || !image) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+
+  // Insert the list into the database
+  const query = `
+    INSERT INTO lists (name, description)
+    VALUES (?, ?)
+  `;
+
+  connection.query(query, [header, description], (err, results) => {
+    if (err) {
+      console.error("Error inserting list:", err);
+      return res.status(500).json({ error: "Failed to create list." });
+    }
+
+    const listId = results.insertId; // Get the ID of the newly created list
+    const extension = path.extname(image.originalname); // Get the file extension (e.g., .jpg, .png)
+    const newFileName = `${listId}${extension}`; // Rename the file to "id.extension"
+    const newFilePath = path.join(__dirname, "..", "public", "list_images", newFileName);
+
+    // Move the file to the "list_images" folder
+    fs.rename(image.path, newFilePath, (err) => {
+      if (err) {
+        console.error("Error moving file:", err);
+        return res.status(500).json({ error: "Failed to save image." });
+      }
+
+      // Insert the user_id and list_id into the user_lists table
+      const userListsQuery = `
+        INSERT INTO user_lists (user_id, list_id)
+        VALUES (?, ?)
+      `;
+
+      connection.query(userListsQuery, [userId, listId], (err) => {
+        if (err) {
+          console.error("Error inserting into user_lists:", err);
+          return res.status(500).json({ error: "Failed to associate user with list." });
+        }
+
+        res.status(201).json({ message: "List created successfully!", listId });
+      });
+    });
+  });
+});
 
 app.get("/addtolist", authenticateToken,  (req, res) => {
   const userId = req.user.id;
@@ -308,7 +397,27 @@ app.post("/changelist", (req, res) => {
   res.status(200).json({ message: "Changes processed successfully." });
 });
 
+app.post("/reviews", authenticateToken, (req, res) => {
+  const { film_id, header, description, rating } = req.body;
+  user_id = req.user.id;
 
+  if (!user_id || !film_id || !header || !description || !rating) {
+    return res.status(400).send("All fields are required.");
+  }
+
+  const query = `
+    INSERT INTO reviews (user_id, film_id, header, description, number_rating)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  connection.query(query, [user_id, film_id, header, description, rating], (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Failed to add review.");
+    }
+    res.status(200).send("Review added successfully.");
+  });
+});
 
 app.get("/list", (req, res) => {
   const list_id = req.query.list_id;

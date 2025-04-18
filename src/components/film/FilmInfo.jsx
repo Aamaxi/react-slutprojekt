@@ -1,7 +1,8 @@
 import FilmPictures from "./FilmPictures.jsx";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"; // To access URL query parameters
-import AddButton from "./AddButton.jsx";
+import AddButton from "./AddButton";
+import GiveRating from "./GiveRating";
 
 export default function FilmInfo() {
   const [filmData, setFilmData] = useState(null);
@@ -63,9 +64,9 @@ export default function FilmInfo() {
         <div className="flex flex-col">
           <span className="flex gap-2">
             <img src="/icons/star.svg" alt="Star" />
-            <h2 className="text-4xl">{averageRating}/10</h2>
+            <h2 className="text-4xl">{averageRating}/5</h2>
           </span>
-          <button className="btn">Give your rating</button>
+          <GiveRating />
         </div>
       </div>
       <FilmPictures />
@@ -85,7 +86,7 @@ export default function FilmInfo() {
             </span>
             <span className="flex gap-1 items-center">
               <img src="/icons/imdb.svg" alt="IMDb logo"/>
-              <p>{film.imdb_rating}/10</p>
+              <p>{film.imdb_rating}/5</p>
             </span>
           </div>
         </div>
