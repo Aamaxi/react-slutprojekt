@@ -54,12 +54,12 @@ export default function CarouselLists() {
 
   return (
     <div className="relative">
-      <h2 className="text-4xl mb-4">My Lists</h2>
+      <h2 className="text-4xl mb-4">Your Lists</h2>
       <div className="relative">
         {/* Left Arrow */}
         <button
           onClick={scrollLeft}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 btn btn-circle"
+          className="absolute left-0 top-1/2 z-10 btn btn-circle"
         >
           ❮
         </button>
@@ -79,7 +79,7 @@ export default function CarouselLists() {
         {/* Right Arrow */}
         <button
           onClick={scrollRight}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 btn btn-circle"
+          className="absolute right-0 top-1/2 z-10 btn btn-circle"
         >
           ❯
         </button>

@@ -9,7 +9,7 @@ export default function Navbar() {
   const loggedIn = isLoggedIn(); // Check if the user is logged in
 
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-base-200 shadow-sm mb-4">
       <div className="navbar-start">
         <Link to="/" className="btn btn-ghost text-xl">
           Flicks

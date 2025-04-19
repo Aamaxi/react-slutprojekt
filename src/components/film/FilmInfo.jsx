@@ -57,7 +57,7 @@ export default function FilmInfo() {
   return (
     <div>
       <div className="flex place-content-between items-center">
-        <div>
+        <div className="flex flex-col gap-2">
           <h1 className="text-5xl">{film.name}</h1> {/* Use dynamic film data */}
           <p>{film.year} • {film.duration} • {film.age_restriction}</p>
         </div>
@@ -70,9 +70,9 @@ export default function FilmInfo() {
         </div>
       </div>
       <FilmPictures />
-      <div className="flex items-center gap-6">
+      <div className="flex flex-col items-center gap-6 sm:flex-row">
         <img
-          className="w-50"
+          className="w-80 sm:w-50"
           src={`/film_posters/${film.film_id}.png`} // Dynamic poster based on film_id
           alt="Poster"
         />

@@ -5,13 +5,10 @@ import Footer from "../components/Footer";
 
 export default function Film() {
   return (
-    <div>
       <main className="flex flex-col items-center max-w-screen-lg mx-auto px-4">
         <FilmInfo />
         <Credits />
         <Comments />
       </main>
-      <Footer />
-    </div>
   );
 }

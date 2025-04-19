@@ -23,8 +23,8 @@ export default function CarouselItem({ filmId }) {
 
   return (
     <a
-      href={`/film/${film.film_id}`} // Link to the film's page
-      className="card bg-base-100 w-60 shadow-sm hover:bg-base-200 transition-colors duration-300"
+      href={`/film?film_id=${film.film_id}`} // Link to the film's page
+      className="card bg-base-200 w-60 shadow-sm hover:bg-base-300 transition-colors duration-300"
     >
       <figure>
         <img

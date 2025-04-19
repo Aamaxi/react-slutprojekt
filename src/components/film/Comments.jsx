@@ -42,7 +42,7 @@ export default function Comments() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <h2 className="text-2xl">Reviews</h2>
       {reviews && reviews.length > 0 ? (
         reviews
@@ -51,9 +51,9 @@ export default function Comments() {
             <div className="card card-border">
               <div key={review.review_id} className="card-body">
                <div className="gap-0">
-                  <div className="flex place-content-between items-center">
-                    <h3 className="card-title">{review.header}</h3>
-                    <p>Rating: {review.number_rating}/5</p>
+                  <div className="flex flex-row place-content-between items-center">
+                    <h3 className="card-title mr-auto">{review.header}</h3>
+                    <p className="ml-auto flex-grow-0">Rating: {review.number_rating}/5</p>
                   </div>
                 <p>By: {getUsername(review.user_id)}</p>
                 </div>

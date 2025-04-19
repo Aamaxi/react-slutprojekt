@@ -54,7 +54,7 @@ export default function GiveRating() {
         className="btn"
         onClick={() => document.getElementById("my_modal_3").showModal()}
       >
-        Give your rating
+        Rate film
       </button>
       <dialog id="my_modal_3" className="modal">
         <div className="modal-box">

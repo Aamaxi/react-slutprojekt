@@ -24,14 +24,14 @@ export default function CarouselItemLists({ listId }) {
   console.log("lists", list.name)
   return (
     <a
-      href={`/list/${list.list_id}`} // Link to the list's page
-      className="card bg-base-100 w-60 shadow-sm hover:bg-base-200 transition-colors duration-300"
+      href={`/list?list_id=${list.list_id}`} // Link to the list's page
+      className="card bg-base-200 w-60 shadow-sm hover:bg-base-300 transition-colors duration-300"
     >
       <figure>
         <img
           src={`/list_images/${list.list_id}.png`}
           alt={list.name}
-          className="w-full h-auto"
+          className="w-full h-55 object-cover"
         />
       </figure>
       <div className="card-body">

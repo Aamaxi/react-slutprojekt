@@ -175,7 +175,6 @@ export default function List() {
           ))}
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
