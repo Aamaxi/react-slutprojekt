@@ -1,3 +1,4 @@
+import { isLoggedIn } from "../../utils/authUtils";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -47,6 +48,15 @@ export default function GiveRating() {
       alert("An error occurred while submitting the review.");
     }
   };
+
+  if (!isLoggedIn()) {
+    console.log("lksjhdlkjsdf")
+    return (
+      <div className="tooltip tooltip-bottom" data-tip="You must be logged in">
+        <button className="btn">Rate film</button>
+      </div>
+    );
+  }
 
   return (
     <div>
