@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
-import { isLoggedIn } from "../../utils/authUtils";
+import { useAuth } from "../../context/AuthContext";
 
 export default function CreateListButton() {
+  const { isLoggedIn, logout } = useAuth(); 
+
   if (!isLoggedIn) {
     console.log("lksdfgkjhsdfkjhfhjk")
     return;

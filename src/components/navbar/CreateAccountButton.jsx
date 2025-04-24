@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
-import { isLoggedIn } from "../../utils/authUtils";
+import { useAuth } from "../../context/AuthContext";
+
 
 export default function CreateAccountButton() {
-  if (!isLoggedIn) {
+  const { isLoggedIn, logout } = useAuth(); 
+
+  if (!logout) {
     return;
   }
   
