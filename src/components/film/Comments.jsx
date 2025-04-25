@@ -41,30 +41,36 @@ export default function Comments() {
     return user ? user.username : "Unknown User";
   };
 
+  const localDate = new Date(reviews.created_at).toLocaleDateString();
+
+
   return (
     <div className="flex flex-col gap-4 w-full">
       <h2 className="text-2xl">Reviews</h2>
       {reviews && reviews.length > 0 ? (
         reviews
           .filter((review) => review.film_id === parseInt(filmId)) // Filter reviews by film_id
-          .map((review) => (
-            <div className="card card-border">
-              <div key={review.review_id} className="card-body">
-               <div className="gap-0">
-                  <div className="flex flex-row place-content-between items-center">
-                    <h3 className="card-title mr-auto">{review.header}</h3>
-                    <p className="ml-auto flex-grow-0">Rating: {review.number_rating}/5</p>
+          .map((review) => {
+            const localDate = new Date(review.created_at).toLocaleDateString(); // Extract only the date
+            return (
+              <div className="card card-border" key={review.review_id}>
+                <div className="card-body">
+                  <div className="gap-0">
+                    <div className="flex flex-row place-content-between items-center">
+                      <h3 className="card-title mr-auto">{review.header}</h3>
+                      <p className="ml-auto flex-grow-0">Rating: {review.number_rating}/5</p>
+                    </div>
+                    <p>By: {getUsername(review.user_id)}</p>
                   </div>
-                <p>By: {getUsername(review.user_id)}</p>
+                  <p>{review.description}</p>
+                  <p>{localDate}</p> {/* Display only the date */}
                 </div>
-                <p>{review.description}</p>
-                <p>{review.created_at}</p>
               </div>
-            </div>
-          ))
+            );
+          })
       ) : (
         <p>No reviews available for this film.</p>
       )}
     </div>
-  );
+  );  
 }

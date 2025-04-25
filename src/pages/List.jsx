@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"; // To access URL query parameters
-import { FaInfoCircle } from "react-icons/fa"; // Import Font Awesome Info Icon
-import Footer from "../components/Footer";
+import { FaTrash } from "react-icons/fa"; // Import Font Awesome Info Icon
 
 export default function List() {
   const [listData, setListData] = useState(null);
@@ -61,6 +60,29 @@ export default function List() {
       }
       return 0;
     });
+  };
+
+  const removeFilmFromList = (filmId) => {
+    // Update the sortedFilms state by filtering out the selected film
+    const updatedFilms = sortedFilms.filter((film) => film.film_id !== filmId);
+    setSortedFilms(updatedFilms);
+    console.log(JSON.stringify({ list_id: listId, film_id: filmId }))
+
+    // Optionally, send a request to the server to update the list
+    fetch(`http://localhost:5000/removeFilm`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ list_id: listId, film_id: filmId }),
+    })  
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Film removed:", data);
+      })
+      .catch((error) => {
+        console.error("Error removing film:", error);
+      });
   };
 
   if (!listData) {
@@ -136,42 +158,47 @@ export default function List() {
         </div>
         <div className="flex flex-col gap-6">
           {sortedFilms.map((film, index) => (
-            <a
-              href={`/film?film_id=${film.film_id}`}
-              key={film.film_id}
-              className="film-item flex shadow-md rounded-lg overflow-hidden relative hover:bg-base-200 transition-colors duration-300"
-            >
-              {/* Poster */}
-              <div className="w-40 flex-shrink-0 bg-gray-200">
-                <img
-                  src={`/film_posters/${film.film_id}.png`}
-                  alt={`${film.name} Poster`}
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              {/* Details */}
-              <div className="p-4 flex flex-col justify-between flex-grow">
-                <h3 className="text-lg font-bold">
-                  {index + 1}. {film.name}
-                </h3>
-                <p className="text-sm">
-                  <strong>Year:</strong> {film.year}
-                </p>
-                <p className="text-sm">
-                  <strong>Duration:</strong> {film.duration}
-                </p>
-                <p className="text-sm">
-                  <strong>Age Restriction:</strong> {film.age_restriction}
-                </p>
-                <p className="text-sm">
-                  <strong>IMDb Rating:</strong> {film.imdb_rating}/10
-                </p>
-              </div>
-              {/* Info Icon */}
-              <div className="absolute top-0 right-3 h-full flex items-center">
-                <FaInfoCircle className="text-3xl cursor-pointer" />
-              </div>
-            </a>
+            <div className="flex flex-row ">
+              <a
+                href={`/film?film_id=${film.film_id}`}
+                key={film.film_id}
+                className="film-item flex flex-grow shadow-md rounded-lg overflow-hidden relative hover:bg-base-200 transition-colors duration-300"
+              >
+                {/* Poster */}
+                <div className="w-40 flex-shrink-0 bg-gray-200">
+                  <img
+                    src={`/film_posters/${film.film_id}.png`}
+                    alt={`${film.name} Poster`}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                {/* Details */}
+                <div className="flex justify-center w-full">
+                  <div className="p-4 flex flex-col justify-between flex-grow">
+                    <h3 className="text-lg font-bold">
+                      {index + 1}. {film.name}
+                    </h3>
+                    <p className="text-sm">
+                      <strong>Year:</strong> {film.year}
+                    </p>
+                    <p className="text-sm">
+                      <strong>Duration:</strong> {film.duration}
+                    </p>
+                    <p className="text-sm">
+                      <strong>Age Restriction:</strong> {film.age_restriction}
+                    </p>
+                    <p className="text-sm">
+                      <strong>IMDb Rating:</strong> {film.imdb_rating}/10
+                    </p>
+                  </div>
+
+                </div>
+
+              </a>
+            <button onClick={() => removeFilmFromList(film.film_id)} className="align-center pl-5">
+              <FaTrash className="text-3xl cursor-pointer hover:text-red-500 transition-colors duration-300" />
+            </button>
+            </div>
           ))}
         </div>
       </div>

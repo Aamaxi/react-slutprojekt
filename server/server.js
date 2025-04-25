@@ -356,6 +356,25 @@ app.get("/addtolist", authenticateToken,  (req, res) => {
   })
 })
 
+app.delete("/reviews/:review_id", authenticateToken, (req, res) => {
+  const { review_id } = req.params;
+  const user_id = req.user.id;
+
+  const query = "DELETE FROM reviews WHERE review_id = ? AND user_id = ?";
+  connection.query(query, [review_id, user_id], (err, results) => {
+    if (err) {
+      console.error("Error deleting review:", err);
+      return res.status(500).json({ error: "Failed to delete review." });
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: "Review not found or not authorized." });
+    }
+
+    res.status(200).json({ message: "Review deleted successfully." });
+  });
+});
+
 app.post("/changelist", (req, res) => {
   const { selectedLists, filmId } = req.body;
 
@@ -418,6 +437,32 @@ app.post("/reviews", authenticateToken, (req, res) => {
     res.status(200).send("Review added successfully.");
   });
 });
+
+app.post("/removeFilm", (req, res) => {
+  console.log("helolo lolololo ")
+  const { list_id, film_id } = req.body;
+
+  if (!list_id || !film_id) {
+    return res.status(400).json({ error: "List ID and Film ID are required." });
+  }
+
+  const query = "DELETE FROM list_films WHERE list_id = ? AND film_id = ?";
+
+  connection.query(query, [list_id, film_id], (err, results) => {
+    if (err) {
+      console.error("Error removing film from list:", err);
+      return res.status(500).json({ error: "Failed to remove film from list." });
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: "Film not found in the list." });
+    }
+
+    res.status(200).json({ message: "Film removed successfully." });
+  });
+});
+
+
 
 app.get("/list", (req, res) => {
   const list_id = req.query.list_id;

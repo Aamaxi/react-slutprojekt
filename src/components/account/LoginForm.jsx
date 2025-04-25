@@ -46,6 +46,11 @@ export default function LoginForm() {
         );
 
         setErrorMessage(null); // Clear any previous error messages
+
+        // Redirect to home and refresh the page
+        setTimeout(() => {
+          window.location.href = "/"; // Redirect to home
+        }, 1000); // Add a slight delay to show the success message
       } else {
         setErrorMessage(
           <div role="alert" className="alert alert-error w-full">
@@ -82,7 +87,7 @@ export default function LoginForm() {
               d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <span>Error! Task failed successfully.</span>
+          <span>Invalid email or password.</span>
         </div>
       );
       console.error(error);

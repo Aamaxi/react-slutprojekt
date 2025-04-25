@@ -44,7 +44,7 @@ export default function FilmInfo() {
   // Function to calculate the average rating
   const calculateAverageRating = () => {
     const filteredReviews = reviews.filter((review) => review.film_id === parseInt(filmId)); // Filter reviews by film_id
-    if (filteredReviews.length === 0) return "No ratings available"; // Handle case with no reviews
+    if (filteredReviews.length === 0) return "Na"; // Handle case with no reviews
 
     const totalRating = filteredReviews.reduce((sum, review) => sum + review.number_rating, 0); // Sum up all ratings
     return (totalRating / filteredReviews.length).toFixed(1); // Calculate and return the average
@@ -62,7 +62,7 @@ export default function FilmInfo() {
           <p>{film.year} • {film.duration} • {film.age_restriction}</p>
         </div>
         <div className="flex flex-col">
-          <span className="flex gap-2">
+          <span className="flex gap-2 flex justify-end">
             <img src="/icons/star.svg" alt="Star" />
             <h2 className="text-4xl">{averageRating}/5</h2>
           </span>

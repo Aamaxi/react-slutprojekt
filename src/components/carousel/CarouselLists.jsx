@@ -47,7 +47,7 @@ export default function CarouselLists() {
   };
 
   if (lists.length === 0) {
-    return <p>No lists available.</p>;
+    return;
   }
 
   console.log("lkhsfd", lists)
