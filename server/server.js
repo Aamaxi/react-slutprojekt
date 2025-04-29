@@ -1,3 +1,4 @@
+require("dotenv").config();
 const mysql = require("mysql2");
 const express = require("express");
 const app = express();
@@ -8,6 +9,11 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const SECRET_KEY = "your-secret-key";
+console.log("DB_HOST:", process.env.DB_HOST);
+console.log("DB_USER:", process.env.DB_USER);
+console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
+console.log("DB_NAME:", process.env.DB_NAME);
+console.log("SECRET_KEY:", process.env.SECRET_KEY);
 
 app.use(cors());
 app.use(express.json());
@@ -23,10 +29,10 @@ const upload = multer({
 });
 
 const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  database: "flicks",
-  password: "slenderman",
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "slenderman",
+  database: process.env.DB_NAME || "flicks",
 });
 
 app.post("/register", (req, res) => {
